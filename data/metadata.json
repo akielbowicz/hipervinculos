@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0",
+  "total_bookmarks": 0,
+  "last_updated": "2026-01-13T21:58:22.205Z",
+  "last_bookmark_id": null,
+  "statistics": {
+    "by_type": {
+      "article": 0,
+      "video": 0,
+      "image": 0,
+      "pdf": 0,
+      "code": 0,
+      "tweet": 0,
+      "other": 0
+    },
+    "by_read_status": {
+      "unread": 0,
+      "reading": 0,
+      "read": 0
+    },
+    "favorites_count": 0,
+    "private_count": 0,
+    "archived_count": 0
+  },
+  "tags_usage": {}
+}

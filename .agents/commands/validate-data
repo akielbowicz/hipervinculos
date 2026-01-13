@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# validate-data - Run data validation checks on bookmarks
+#
+# Usage: /validate-data
+#
+# This command validates the integrity of bookmark data including:
+# - Unique bookmark IDs
+# - Valid URL formats
+# - Required fields present
+# - No future timestamps
+# - Tag consistency with tags.json
+# - JSON structure validity
+
+set -euo pipefail
+
+echo "🔍 Running data validation checks..."
+echo ""
+
+# Run validation script
+if node scripts/validate-bookmarks.js; then
+    echo ""
+    echo "✅ All validation checks passed!"
+    exit 0
+else
+    echo ""
+    echo "❌ Validation failed. Please review errors above."
+    exit 1
+fi

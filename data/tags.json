@@ -1,0 +1,34 @@
+{
+  "tags": [
+    {
+      "name": "javascript",
+      "color": "#f7df1e",
+      "description": "JavaScript programming language"
+    },
+    {
+      "name": "python",
+      "color": "#3776ab",
+      "description": "Python programming language"
+    },
+    {
+      "name": "tutorial",
+      "color": "#10b981",
+      "description": "Tutorial and learning resources"
+    },
+    {
+      "name": "reference",
+      "color": "#6366f1",
+      "description": "Reference documentation"
+    },
+    {
+      "name": "tools",
+      "color": "#8b5cf6",
+      "description": "Development tools and utilities"
+    },
+    {
+      "name": "design",
+      "color": "#ec4899",
+      "description": "Design resources and inspiration"
+    }
+  ]
+}

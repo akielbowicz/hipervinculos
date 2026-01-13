@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# stats - Display bookmark statistics
+#
+# Usage: /stats
+#
+# Shows:
+# - Total bookmarks
+# - Read status breakdown
+# - Favorites and private counts
+# - Content type distribution
+# - Top tags by usage
+
+set -euo pipefail
+
+echo "📊 Bookmark Statistics"
+echo "======================"
+echo ""
+
+# Use Node.js to parse and display stats
+node -e "
+const meta = require('./data/metadata.json');
+
+console.log('Total Bookmarks:', meta.total_bookmarks);
+console.log('Last Updated:', new Date(meta.last_updated).toLocaleString());
+console.log('');
+
+console.log('Read Status:');
+Object.entries(meta.statistics.by_read_status).forEach(([status, count]) => {
+  const pct = meta.total_bookmarks > 0 ? Math.round(count / meta.total_bookmarks * 100) : 0;
+  console.log('  ' + status + ':', count, '(' + pct + '%)');
+});
+console.log('');
+
+console.log('Special Collections:');
+console.log('  Favorites:', meta.statistics.favorites_count);
+console.log('  Private:', meta.statistics.private_count);
+console.log('  Archived:', meta.statistics.archived_count || 0);
+console.log('');
+
+console.log('By Type:');
+Object.entries(meta.statistics.by_type)
+  .sort((a, b) => b[1] - a[1])
+  .forEach(([type, count]) => {
+    if (count > 0) {
+      console.log('  ' + type + ':', count);
+    }
+  });
+console.log('');
+
+console.log('Top Tags:');
+Object.entries(meta.tags_usage)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .forEach(([tag, count]) => {
+    console.log('  #' + tag + ':', count);
+  });
+"

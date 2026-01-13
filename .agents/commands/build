@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# build - Build the static site and search index
+#
+# Usage: /build
+#
+# This command:
+# 1. Generates HTML pages from bookmarks.json
+# 2. Builds Pagefind search index
+# 3. Updates metadata statistics
+#
+# The generated files are ready to be committed and deployed.
+
+set -euo pipefail
+
+echo "🏗️  Building static site..."
+echo ""
+
+echo "📄 Generating HTML pages from bookmarks..."
+node scripts/generate-pages.js
+
+echo ""
+echo "🔍 Building Pagefind search index..."
+npx pagefind --site .
+
+echo ""
+echo "📊 Updating metadata statistics..."
+node scripts/update-metadata.js
+
+echo ""
+echo "✅ Build complete!"
+echo ""
+echo "Generated files:"
+echo "  - pages/*.html (bookmark pages)"
+echo "  - pagefind/ (search index)"
+echo "  - data/metadata.json (updated stats)"
+echo ""
+echo "Next steps:"
+echo "  - Review changes: git status"
+echo "  - Test locally: just serve"
+echo "  - Commit: git add . && git commit -m 'build: update site'"

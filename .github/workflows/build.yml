@@ -1,0 +1,83 @@
+name: Build Pagefind Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/bookmarks.json'
+      - 'data/tags.json'
+      - 'scripts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Pagefind
+        run: npm install -g pagefind
+
+      - name: Generate HTML pages from bookmarks
+        run: node scripts/generate-pages.js
+
+      - name: Build Pagefind search index
+        run: npx pagefind --site .
+
+      - name: Update metadata statistics
+        run: node scripts/update-metadata.js
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit generated files
+        run: |
+          git add pagefind/ pages/ data/metadata.json
+          git diff --quiet && git diff --staged --quiet || \
+            git commit -m "build: update search index and metadata [skip ci]"
+          git push || true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Build summary
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Total bookmarks: $(node -e "console.log(require('./data/metadata.json').total_bookmarks)")" >> $GITHUB_STEP_SUMMARY
+          echo "- Pages generated: $(ls pages/*.html 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployment URL: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY

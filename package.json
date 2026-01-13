@@ -1,0 +1,27 @@
+{
+  "name": "hipervinculos",
+  "version": "1.0.0",
+  "description": "Personal bookmark manager with Telegram bot and full-text search",
+  "main": "index.html",
+  "scripts": {
+    "build": "node scripts/generate-pages.js && npx pagefind --site . && node scripts/update-metadata.js",
+    "validate": "node scripts/validate-bookmarks.js",
+    "check-links": "node scripts/check-links.js",
+    "update-metadata": "node scripts/update-metadata.js",
+    "serve": "python3 -m http.server 8000",
+    "dev": "npm run build && npm run serve"
+  },
+  "keywords": [
+    "bookmarks",
+    "telegram",
+    "pagefind",
+    "search",
+    "static-site"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "pagefind": "^1.0.0"
+  },
+  "dependencies": {}
+}
