@@ -7,16 +7,16 @@ const { loadData, saveData } = require('./data-utils');
 const args = process.argv.slice(2);
 const help = args.includes('--help') || args.includes('-h');
 const dryRun = args.includes('--dry-run');
-// Find the file path (first argument that isn't a flag)
-const filePath = args.find(arg => !arg.startsWith('-'));
+// Find the path (first argument that isn't a flag)
+const inputPath = args.find(arg => !arg.startsWith('-'));
 
 // Find tag arg
 const tagIndex = args.indexOf('--tag');
 const extraTag = tagIndex !== -1 && args[tagIndex + 1] ? args[tagIndex + 1] : null;
 
-if (help || !filePath) {
+if (help || !inputPath) {
   console.log(`
-Usage: node scripts/import-google-keep.js <file-path> [options]
+Usage: node scripts/import-google-keep.js <file-or-directory-path> [options]
 
 Options:
   --dry-run   Preview import without saving
@@ -33,31 +33,44 @@ async function importKeep() {
   if (dryRun) console.log(`🔍 DRY RUN MODE: No changes will be written.`);
 
   // 1. Load Input
-  const absolutePath = path.resolve(filePath);
+  const absolutePath = path.resolve(inputPath);
   if (!fs.existsSync(absolutePath)) {
-    console.error(`❌ File not found: ${absolutePath}`);
+    console.error(`❌ Path not found: ${absolutePath}`);
     process.exit(1);
   }
 
-  let keepData;
+  let keepData = [];
   try {
-    const raw = fs.readFileSync(absolutePath, 'utf8');
-    keepData = JSON.parse(raw);
-    
-    // Handle wrapped formats if necessary
-    if (!Array.isArray(keepData)) {
-        if (keepData.notes && Array.isArray(keepData.notes)) {
-            keepData = keepData.notes;
-        } else {
-            throw new Error('JSON root must be an array or have a "notes" array.');
-        }
+    const stats = fs.statSync(absolutePath);
+    if (stats.isDirectory()) {
+      const files = fs.readdirSync(absolutePath);
+      const jsonFiles = files.filter(file => path.extname(file).toLowerCase() === '.json');
+      console.log(`📂 Found ${jsonFiles.length} JSON files in directory.`);
+      
+      for (const file of jsonFiles) {
+        const filePath = path.join(absolutePath, file);
+        const raw = fs.readFileSync(filePath, 'utf8');
+        const note = JSON.parse(raw);
+        keepData.push(note);
+      }
+    } else {
+      const raw = fs.readFileSync(absolutePath, 'utf8');
+      const parsedData = JSON.parse(raw);
+      if (Array.isArray(parsedData)) {
+        keepData = parsedData;
+      } else if (parsedData.notes && Array.isArray(parsedData.notes)) {
+        keepData = parsedData.notes;
+      } else {
+        // Assume a single note object if it's not in an array, like the previous fix
+        keepData = [parsedData];
+      }
     }
   } catch (e) {
-    console.error(`❌ Failed to parse JSON: ${e.message}`);
+    console.error(`❌ Failed to read or parse data: ${e.message}`);
     process.exit(1);
   }
 
-  console.log(`📄 Found ${keepData.length} notes in input file.`);
+  console.log(`📄 Found ${keepData.length} total notes to process.`);
 
   // 2. Load Existing Bookmarks (for deduplication)
   // Note: data-utils looks for file relative to __dirname/../data/
