@@ -50,12 +50,26 @@ async function init() {
 // Load bookmarks from data file
 async function loadBookmarks() {
   try {
-    const response = await fetch('data/bookmarks.json');
+    const response = await fetch('data/bookmarks.jsonl');
     if (!response.ok) {
       throw new Error('Failed to load bookmarks');
     }
 
-    state.bookmarks = await response.json();
+    const text = await response.text();
+    state.bookmarks = text
+      .trim()
+      .split(/\r?\n/)
+      .filter(line => line.trim())
+      .map(line => {
+        try {
+          return JSON.parse(line);
+        } catch (e) {
+          console.error('Error parsing line:', line, e);
+          return null;
+        }
+      })
+      .filter(item => item !== null);
+
     state.filteredBookmarks = [...state.bookmarks];
     state.loading = false;
 
