@@ -44,9 +44,9 @@ Successfully set up the complete infrastructure for Hipervínculos, a personal b
 
 **Data Storage:**
 - Git as database (JSON files)
-- `data/bookmarks.json` - Array of bookmark objects
+- `data/bookmarks.jsonl` - Array of bookmark objects
 - `data/metadata.json` - Statistics and system metadata
-- `data/tags.json` - Tag definitions with colors
+- `data/tags.jsonl` - Tag definitions with colors
 
 **CI/CD:**
 - GitHub Actions (3 workflows)
@@ -68,9 +68,9 @@ hipervinculos/
 │   ├── app.js             # Client-side JavaScript
 │   └── styles.css         # Responsive CSS with dark mode
 ├── data/                   # JSON data storage
-│   ├── bookmarks.json     # Main bookmark storage (empty)
+│   ├── bookmarks.jsonl     # Main bookmark storage (empty)
 │   ├── metadata.json      # Statistics (synced)
-│   └── tags.json          # Tag definitions
+│   └── tags.jsonl          # Tag definitions
 ├── scripts/                # Build and maintenance
 │   ├── validate-bookmarks.js  # Data integrity checks
 │   ├── update-metadata.js     # Statistics calculation
@@ -113,11 +113,11 @@ hipervinculos/
 
 ### Data Files
 
-**`data/bookmarks.json`**
-- Array of bookmark objects
-- Current state: Empty `[]`
+**`data/bookmarks.jsonll`**
+- Newline-delimited JSON (JSONL) storage for bookmarks
+- Current state: Empty
 - Schema documented in AGENTS.md
-- Append-only pattern (git tracks history)
+- Append-friendly and Git-diff friendly format
 
 **`data/metadata.json`**
 - System statistics (updated by update-metadata.js)
@@ -129,7 +129,7 @@ hipervinculos/
   - Tag usage counts
   - Last updated timestamp
 
-**`data/tags.json`**
+**`data/tags.jsonl`**
 - Tag definitions with colors
 - Pre-populated with 6 common tags:
   - javascript, python, tutorial, reference, tools, design
@@ -154,7 +154,7 @@ hipervinculos/
 - Counts by type, read status, flags
 - Aggregates tag usage
 - Finds last bookmark ID
-- Always run after modifying bookmarks.json
+- Always run after modifying bookmarks.jsonl
 
 **`scripts/generate-pages.js`**
 - Creates HTML pages for Pagefind indexing
@@ -258,7 +258,7 @@ just tags               # List all tags
 ### Adding Bookmarks (Manual - for testing)
 
 ```bash
-# 1. Add bookmark object to data/bookmarks.json
+# 1. Add bookmark object to data/bookmarks.jsonl
 # 2. Update metadata
 just update-metadata
 
@@ -370,7 +370,7 @@ All other fields are optional but recommended for better search and display.
 
 **Warned (warnings):**
 1. Undefined tags in bookmarks
-2. Unused tags in tags.json
+2. Unused tags in tags.jsonl
 3. Metadata statistics out of sync
 4. Broken external links
 
@@ -484,7 +484,7 @@ All other fields are optional but recommended for better search and display.
 
 4. **GitHub API Integration**
    - Implement read/write operations
-   - Commit bookmarks.json updates
+   - Commit bookmarks.jsonl updates
    - Handle conflicts
    - Update metadata.json
 
