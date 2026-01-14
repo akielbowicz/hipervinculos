@@ -29,6 +29,21 @@
       "name": "design",
       "color": "#ec4899",
       "description": "Design resources and inspiration"
+    },
+    {
+      "name": "prompting",
+      "color": "#64748b",
+      "description": "Auto-generated tag"
+    },
+    {
+      "name": "llm",
+      "color": "#64748b",
+      "description": "Auto-generated tag"
+    },
+    {
+      "name": "cli",
+      "color": "#64748b",
+      "description": "Auto-generated tag"
     }
   ]
 }

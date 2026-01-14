@@ -1,20 +1,20 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 0,
-  "last_updated": "2026-01-14T01:14:58.625Z",
-  "last_bookmark_id": null,
+  "total_bookmarks": 1,
+  "last_updated": "2026-01-14T01:22:28.547Z",
+  "last_bookmark_id": "e90d26a6-342f-4f04-a70c-fd9ce804bf30",
   "statistics": {
     "by_type": {
       "article": 0,
       "video": 0,
       "image": 0,
       "pdf": 0,
-      "code": 0,
+      "code": 1,
       "tweet": 0,
       "other": 0
     },
     "by_read_status": {
-      "unread": 0,
+      "unread": 1,
       "reading": 0,
       "read": 0
     },
@@ -22,5 +22,11 @@
     "private_count": 0,
     "archived_count": 0
   },
-  "tags_usage": {}
+  "tags_usage": {
+    "prompting": 1,
+    "llm": 1,
+    "cli": 1,
+    "tools": 1,
+    "reference": 1
+  }
 }
