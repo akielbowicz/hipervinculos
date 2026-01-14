@@ -65,6 +65,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline code documentation in all scripts
 - Command-line help via `just --list`
 
+### Changed
+
+#### UI Redesign (2026-01-13)
+- Implemented "Minimalist Grayscale" design language
+- Updated color palette to strict black/white/gray (#171717, #ffffff)
+- Refactored Navigation:
+  - Consolidated header layout
+  - Converted filter buttons to text-based tabs
+  - Simplified dropdowns
+- Redesigned Bookmark Cards:
+  - Removed "action bar" and heavy shadows
+  - Implemented "Flat" design with minimal borders
+  - Moved "Favorite" button to image overlay
+  - Made entire card clickable
+  - Simplified metadata display with interpuncts
+
 ### Technical Details
 
 **Stack:**
