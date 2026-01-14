@@ -242,6 +242,7 @@ function createBookmarkCard(bookmark) {
   
   // Make whole card clickable
   card.onclick = (e) => {
+    // prevent click if clicking on a button or link
     if (e.target.closest('button') || e.target.closest('a')) return;
     openBookmark(bookmark.url);
   };
@@ -250,20 +251,32 @@ function createBookmarkCard(bookmark) {
   // Image
   const image = bookmark.image
     ? `<img src="${escapeHtml(bookmark.image)}" alt="" class="bookmark-image" loading="lazy" onerror="this.style.display='none'">`
-    : `<div class="bookmark-image placeholder">${typeIcons[bookmark.content_type] || '📄'}</div>`;
+    : `<div class="bookmark-image placeholder"><span>${typeIcons[bookmark.content_type] || '📄'}</span></div>`;
 
-  // Favorite Button
+  // Favorite Button (SVG)
+  const starIcon = bookmark.is_favorite
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+
   const favoriteBtn = `
     <button class="favorite-btn ${bookmark.is_favorite ? 'active' : ''}" 
             onclick="toggleFavorite(event, '${bookmark.id}')"
-            title="${bookmark.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
-      ${bookmark.is_favorite ? '★' : '☆'}
+            aria-label="${bookmark.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
+      ${starIcon}
     </button>
   `;
 
   // Format date
   const date = new Date(bookmark.timestamp);
   const relativeDate = formatRelativeDate(date);
+  
+  // Simple domain extraction
+  let domain = '';
+  try {
+    domain = new URL(bookmark.url).hostname.replace('www.', '');
+  } catch (e) {
+    domain = bookmark.site_name || '';
+  }
 
   card.innerHTML = `
     <div class="bookmark-media">
@@ -281,14 +294,13 @@ function createBookmarkCard(bookmark) {
 
       <div class="bookmark-metadata">
         <span>${typeIcons[bookmark.content_type || 'other']}</span>
-        <span>·</span>
-        ${bookmark.site_name ? `<span>${escapeHtml(bookmark.site_name)}</span><span>·</span>` : ''}
-        <time datetime="${bookmark.timestamp}">${relativeDate}</time>
+        <span>${domain}</span>
+        <span>${relativeDate}</span>
       </div>
 
       ${bookmark.tags && bookmark.tags.length > 0 ? `
         <div class="bookmark-tags">
-          ${bookmark.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
+          ${bookmark.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
         </div>
       ` : ''}
     </div>
