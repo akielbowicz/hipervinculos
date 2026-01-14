@@ -12,13 +12,13 @@
     <!-- Header -->
     <header class="header">
       <div class="header-content">
-        <h1 class="logo">🔖 Hipervínculos</h1>
+        <h1 class="logo">Hipervínculos</h1>
         <div class="search-container">
           <input
             type="search"
             id="search"
             class="search-input"
-            placeholder="Search bookmarks..."
+            placeholder="Search..."
             autocomplete="off"
           />
           <button class="search-clear" id="search-clear" aria-label="Clear search">×</button>
@@ -26,30 +26,30 @@
       </div>
     </header>
 
-    <!-- Filters -->
-    <nav class="filters">
-      <div class="filter-group">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="unread">Unread</button>
-        <button class="filter-btn" data-filter="favorites">Favorites</button>
+    <!-- Navigation / Filters -->
+    <nav class="sub-nav">
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-filter="all">All</button>
+        <button class="nav-tab" data-filter="unread">Unread</button>
+        <button class="nav-tab" data-filter="favorites">Favorites</button>
       </div>
 
-      <div class="filter-selects">
-        <select id="type-filter" class="filter-select">
+      <div class="nav-tools">
+        <select id="type-filter" class="minimal-select">
           <option value="">All Types</option>
-          <option value="article">📄 Articles</option>
-          <option value="video">📹 Videos</option>
-          <option value="code">💻 Code</option>
-          <option value="image">🖼️ Images</option>
-          <option value="tweet">📱 Tweets</option>
-          <option value="pdf">📕 PDFs</option>
-          <option value="other">📄 Other</option>
+          <option value="article">Articles</option>
+          <option value="video">Videos</option>
+          <option value="code">Code</option>
+          <option value="image">Images</option>
+          <option value="tweet">Tweets</option>
+          <option value="pdf">PDFs</option>
+          <option value="other">Other</option>
         </select>
 
-        <select id="sort-select" class="filter-select">
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-          <option value="title">Title A-Z</option>
+        <select id="sort-select" class="minimal-select">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="title">A-Z</option>
         </select>
       </div>
     </nav>

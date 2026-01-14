@@ -102,9 +102,9 @@ function setupEventListeners() {
   });
 
   // Filter buttons
-  document.querySelectorAll('.filter-btn').forEach(btn => {
+  document.querySelectorAll('.nav-tab').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       state.currentFilter = e.target.dataset.filter;
       applyFilters();
@@ -239,18 +239,37 @@ function createBookmarkCard(bookmark) {
   const card = document.createElement('article');
   card.className = 'bookmark-card';
   card.dataset.id = bookmark.id;
+  
+  // Make whole card clickable
+  card.onclick = (e) => {
+    if (e.target.closest('button') || e.target.closest('a')) return;
+    openBookmark(bookmark.url);
+  };
+  card.style.cursor = 'pointer';
 
   // Image
   const image = bookmark.image
     ? `<img src="${escapeHtml(bookmark.image)}" alt="" class="bookmark-image" loading="lazy" onerror="this.style.display='none'">`
     : `<div class="bookmark-image placeholder">${typeIcons[bookmark.content_type] || '📄'}</div>`;
 
+  // Favorite Button
+  const favoriteBtn = `
+    <button class="favorite-btn ${bookmark.is_favorite ? 'active' : ''}" 
+            onclick="toggleFavorite(event, '${bookmark.id}')"
+            title="${bookmark.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
+      ${bookmark.is_favorite ? '★' : '☆'}
+    </button>
+  `;
+
   // Format date
   const date = new Date(bookmark.timestamp);
   const relativeDate = formatRelativeDate(date);
 
   card.innerHTML = `
-    ${image}
+    <div class="bookmark-media">
+      ${image}
+      ${favoriteBtn}
+    </div>
     <div class="bookmark-content">
       <a href="${escapeHtml(bookmark.url)}" target="_blank" rel="noopener" class="bookmark-title">
         ${escapeHtml(bookmark.title || bookmark.url)}
@@ -261,9 +280,10 @@ function createBookmarkCard(bookmark) {
       ` : ''}
 
       <div class="bookmark-metadata">
-        <span class="bookmark-type">${typeIcons[bookmark.content_type || 'other']} ${bookmark.content_type || 'other'}</span>
-        ${bookmark.site_name ? `<span class="bookmark-site">${escapeHtml(bookmark.site_name)}</span>` : ''}
-        <time class="bookmark-date" datetime="${bookmark.timestamp}">${relativeDate}</time>
+        <span>${typeIcons[bookmark.content_type || 'other']}</span>
+        <span>·</span>
+        ${bookmark.site_name ? `<span>${escapeHtml(bookmark.site_name)}</span><span>·</span>` : ''}
+        <time datetime="${bookmark.timestamp}">${relativeDate}</time>
       </div>
 
       ${bookmark.tags && bookmark.tags.length > 0 ? `
@@ -271,15 +291,6 @@ function createBookmarkCard(bookmark) {
           ${bookmark.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
         </div>
       ` : ''}
-
-      <div class="bookmark-actions">
-        <button class="action-btn favorite ${bookmark.is_favorite ? 'active' : ''}" onclick="toggleFavorite('${bookmark.id}')">
-          ${bookmark.is_favorite ? '⭐' : '☆'}
-        </button>
-        <button class="action-btn" onclick="openBookmark('${escapeHtml(bookmark.url)}')">
-          Open →
-        </button>
-      </div>
     </div>
   `;
 
@@ -309,7 +320,8 @@ function updateStats() {
 }
 
 // Toggle favorite status (placeholder - would call API)
-window.toggleFavorite = function(id) {
+window.toggleFavorite = function(event, id) {
+  event.stopPropagation();
   const bookmark = state.bookmarks.find(b => b.id === id);
   if (bookmark) {
     bookmark.is_favorite = !bookmark.is_favorite;
