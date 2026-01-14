@@ -81,11 +81,17 @@ class Validator {
   validateUniqueIds() {
     const ids = new Set();
     const duplicates = [];
+    const invalidFormats = [];
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
     for (const bookmark of this.bookmarks) {
       if (!bookmark.id) {
         this.error(`Bookmark missing ID: ${bookmark.url || 'unknown'}`);
         continue;
+      }
+
+      if (!uuidRegex.test(bookmark.id)) {
+        invalidFormats.push(bookmark.id);
       }
 
       if (ids.has(bookmark.id)) {
@@ -94,10 +100,16 @@ class Validator {
       ids.add(bookmark.id);
     }
 
+    if (invalidFormats.length > 0) {
+      this.error(`Found ${invalidFormats.length} invalid ID formats (should be UUID): ${invalidFormats.join(', ')}`);
+    }
+
     if (duplicates.length > 0) {
       this.error(`Found ${duplicates.length} duplicate IDs: ${duplicates.join(', ')}`);
-    } else {
-      this.success('All bookmark IDs are unique');
+    }
+
+    if (duplicates.length === 0 && invalidFormats.length === 0) {
+      this.success('All bookmark IDs are unique and valid UUIDs');
     }
   }
 
@@ -173,9 +185,17 @@ class Validator {
 
   validateUrls() {
     const invalid = [];
+    const urlCounts = new Map();
+    const duplicates = [];
 
     for (const bookmark of this.bookmarks) {
       if (!bookmark.url) continue;
+
+      // Check for duplicates
+      if (urlCounts.has(bookmark.url)) {
+        duplicates.push({ id: bookmark.id, url: bookmark.url });
+      }
+      urlCounts.set(bookmark.url, (urlCounts.get(bookmark.url) || 0) + 1);
 
       try {
         const url = new URL(bookmark.url);
@@ -195,6 +215,13 @@ class Validator {
       }
     }
 
+    if (duplicates.length > 0) {
+      this.warn(`Found ${duplicates.length} duplicate URLs:`);
+      duplicates.forEach(d => {
+        console.log(`  ${d.id}: ${d.url}`);
+      });
+    }
+
     if (invalid.length > 0) {
       this.error(`Found ${invalid.length} bookmarks with invalid URLs`);
       invalid.forEach(b => {
@@ -209,6 +236,7 @@ class Validator {
     const definedTags = new Set(this.tags.tags?.map(t => t.name) || []);
     const undefinedTags = new Set();
     const unusedTags = new Set(definedTags);
+    const invalidTypes = [];
 
     for (const bookmark of this.bookmarks) {
       if (!bookmark.tags || !Array.isArray(bookmark.tags)) {
@@ -217,12 +245,22 @@ class Validator {
       }
 
       for (const tag of bookmark.tags) {
+        if (typeof tag !== 'string') {
+          invalidTypes.push({ id: bookmark.id, tag: tag });
+          continue;
+        }
+
         if (!definedTags.has(tag)) {
           undefinedTags.add(tag);
         } else {
           unusedTags.delete(tag);
         }
       }
+    }
+
+    if (invalidTypes.length > 0) {
+      this.error(`Found ${invalidTypes.length} tags with invalid type (must be string)`);
+      invalidTypes.forEach(t => console.log(`  ${t.id}: ${JSON.stringify(t.tag)}`));
     }
 
     if (undefinedTags.size > 0) {
@@ -233,7 +271,7 @@ class Validator {
       this.info(`${unusedTags.size} tags defined but not used: ${Array.from(unusedTags).join(', ')}`);
     }
 
-    if (undefinedTags.size === 0 && unusedTags.size === 0) {
+    if (undefinedTags.size === 0 && unusedTags.size === 0 && invalidTypes.length === 0) {
       this.success('All tags are properly defined');
     }
   }
@@ -268,7 +306,15 @@ class Validator {
 
     // Validate statistics match actual counts
     const actualStats = {
-      by_type: {},
+      by_type: {
+        article: 0,
+        video: 0,
+        image: 0,
+        pdf: 0,
+        code: 0,
+        tweet: 0,
+        other: 0
+      },
       by_read_status: { unread: 0, reading: 0, read: 0 },
       favorites_count: 0,
       private_count: 0,
@@ -278,7 +324,14 @@ class Validator {
     for (const bookmark of this.bookmarks) {
       // Count by type
       const type = bookmark.content_type || 'other';
-      actualStats.by_type[type] = (actualStats.by_type[type] || 0) + 1;
+      if (actualStats.by_type[type] !== undefined) {
+         actualStats.by_type[type]++;
+      } else {
+         // Handle unexpected types if necessary, or just count them?
+         // For strictness, they should be validated by validateContentTypes already.
+         // We can stick to the known keys.
+         actualStats.by_type[type] = (actualStats.by_type[type] || 0) + 1;
+      }
 
       // Count by read status
       const status = bookmark.read_status || 'unread';
