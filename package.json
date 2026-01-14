@@ -7,6 +7,7 @@
     "build": "node scripts/generate-pages.js && npx pagefind --site . && node scripts/update-metadata.js",
     "validate": "node scripts/validate-bookmarks.js",
     "check-links": "node scripts/check-links.js",
+    "import:keep": "node scripts/import-google-keep.js",
     "update-metadata": "node scripts/update-metadata.js",
     "serve": "python3 -m http.server 8000",
     "dev": "npm run build && npm run serve"

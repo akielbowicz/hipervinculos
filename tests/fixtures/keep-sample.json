@@ -1,0 +1,49 @@
+[
+  {
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "textContent": "Check out this amazing article about bookmarks: https://example.com/article\nIt is really cool.",
+    "title": "My Great Bookmark",
+    "userEditedTimestampUsec": 1735689600000000,
+    "createdTimestampUsec": 1735689600000000,
+    "labels": [
+      { "name": "tech" },
+      { "name": "reading" }
+    ]
+  },
+  {
+    "color": "RED",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": true,
+    "textContent": "Just a raw link https://github.com/generic/repo",
+    "title": "",
+    "userEditedTimestampUsec": 1735603200000000,
+    "createdTimestampUsec": 1735603200000000,
+    "labels": []
+  },
+  {
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "textContent": "This is a note about groceries. Milk, Eggs, Bread.",
+    "title": "Groceries",
+    "userEditedTimestampUsec": 1735516800000000,
+    "createdTimestampUsec": 1735516800000000,
+    "labels": [ { "name": "personal" } ]
+  },
+  {
+    "color": "BLUE",
+    "isTrashed": false,
+    "isPinned": true,
+    "isArchived": false,
+    "textContent": "Two links here:\n1. https://site1.com\n2. https://site2.com",
+    "title": "Research Sources",
+    "userEditedTimestampUsec": 1735430400000000,
+    "createdTimestampUsec": 1735430400000000,
+    "labels": [ { "name": "research" } ]
+  }
+]
