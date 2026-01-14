@@ -19,10 +19,10 @@ Successfully refined the Hipervínculos frontend to an ultra-minimalist, text-ce
 - ✅ Agent commands for Claude Code integration
 
 **What's Next:**
-- Cloudflare Worker setup for backend
+- Cloudflare Worker setup (in progress)
+- GitHub API integration for data persistence
 - Telegram bot integration
 - URL metadata extraction implementation
-- GitHub API integration for data persistence
 
 ---
 
@@ -155,10 +155,12 @@ git commit -m "data: add bookmark - Title Here"
 ### Immediate (Phase 1: Core Backend)
 
 1. **Cloudflare Worker Setup**
-   - Create `worker/` directory
-   - Set up wrangler.toml configuration
-   - Implement basic webhook endpoint
-   - Deploy to Cloudflare
+   - ✅ `worker/` directory and config (`wrangler.toml`, `package.json`) created
+   - ✅ Dependencies installed
+   - ✅ Initial project structure for `worker/src` and `worker/test` created
+   - ✅ `docs/plan-worker-backend.md` updated with refined plan
+2. **GitHub API Integration**
+   - 🚧 **In Progress:** GitHub Adapter (`worker/src/github.js`) implemented and unit tested.
 
 2. **Telegram Bot Integration**
    - Create bot via @BotFather

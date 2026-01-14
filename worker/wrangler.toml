@@ -1,0 +1,23 @@
+name = "hipervinculos-worker"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+node_compat = true
+
+# Cron Triggers (Hourly)
+[triggers]
+crons = ["0 * * * *"]
+
+# KV Namespaces (IDs will be replaced by real ones after `wrangler kv:namespace create`)
+# For dev/preview, we use placeholders or binding names directly.
+[[kv_namespaces]]
+binding = "KV_BOOKMARKS"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+preview_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+[vars]
+GITHUB_OWNER = "akielbowicz"
+GITHUB_REPO = "hipervinculos"
+# Secrets (set via `wrangler secret put`):
+# TELEGRAM_BOT_TOKEN
+# GITHUB_TOKEN
+# WEBHOOK_SECRET
