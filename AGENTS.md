@@ -134,10 +134,11 @@ Telegram → Worker → GitHub API → Actions → Pagefind → Pages
 ### 5. AI Assistant Integration
 
 **Agent Commands** (`.agents/commands/`):
-- Structured prompts for common tasks
-- Consistent with project conventions
-- Include validation and error handling
-- Document expected outcomes
+- `add-bookmark`: Quick bookmark addition
+- `validate-data`: Run validation checks
+- `generate-build`: Trigger build process
+- `review`: Run Rule of 5 review on code/changes
+- `prepare-commit`: Interactive workflow for safe, atomic commits
 
 **Usage Pattern:**
 ```bash
