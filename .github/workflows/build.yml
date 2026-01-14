@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'data/bookmarks.json'
-      - 'data/tags.json'
+      - 'data/bookmarks.jsonl'
+      - 'data/tags.jsonl'
       - 'scripts/**'
   workflow_dispatch:
 

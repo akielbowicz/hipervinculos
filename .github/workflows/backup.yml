@@ -26,9 +26,9 @@ jobs:
         run: |
           mkdir -p backups
           tar -czf backups/bookmarks-backup-${{ steps.timestamp.outputs.date }}.tar.gz \
-            data/bookmarks.json \
+            data/bookmarks.jsonl \
             data/metadata.json \
-            data/tags.json
+            data/tags.jsonl
 
       - name: Generate backup manifest
         run: |
@@ -39,9 +39,9 @@ jobs:
             "total_bookmarks": $(jq '.total_bookmarks' data/metadata.json),
             "backup_file": "bookmarks-backup-${{ steps.timestamp.outputs.date }}.tar.gz",
             "files": [
-              "data/bookmarks.json",
+              "data/bookmarks.jsonl",
               "data/metadata.json",
-              "data/tags.json"
+              "data/tags.jsonl"
             ]
           }
           EOF
@@ -67,9 +67,9 @@ jobs:
 
             ### Contents
 
-            - `bookmarks.json` - All bookmark data
+            - `bookmarks.jsonl` - All bookmark data
             - `metadata.json` - Statistics and metadata
-            - `tags.json` - Tag definitions
+            - `tags.jsonl` - Tag definitions
 
             ### Restore
 
