@@ -66,14 +66,11 @@ hipervinculos/
 │   └── DEVELOPMENT.md              # Developer guide
 │
 ├── specs/                          # Feature specifications (BDD style)
-│   ├── telegram-bot.feature        # Telegram bot behavior
-│   ├── metadata-extraction.feature # URL processing
-│   └── search.feature              # Search functionality
+│   └── bookmark-complete-spec.md   # Complete system specification
 │
 ├── index.html                      # Main static site interface
 ├── justfile                        # Development automation
 ├── package.json                    # Node.js dependencies
-├── bookmark-complete-spec.md       # Complete system specification
 ├── CHANGELOG.md                    # Version history
 └── README.md                       # Project overview
 ```
