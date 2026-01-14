@@ -73,7 +73,9 @@ async function importKeep() {
     imported: 0
   };
 
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  // Regex to find URLs, avoiding trailing punctuation common in text
+  // Matches http/https, non-whitespace, but doesn't end with .,;:!?)]
+  const urlRegex = /https?:\/\/[^\s]+(?<![.,;:!?\)\]])/g;
 
   for (const note of keepData) {
     // Skip trashed items

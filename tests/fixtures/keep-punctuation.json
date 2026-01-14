@@ -1,0 +1,24 @@
+[
+  {
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "textContent": "Punctuation test: https://example.com/foo. cool right?",
+    "title": "Dot Test",
+    "userEditedTimestampUsec": 1735689600000000,
+    "createdTimestampUsec": 1735689600000000,
+    "labels": []
+  },
+  {
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "textContent": "(See: https://example.com/bar)",
+    "title": "Parens Test",
+    "userEditedTimestampUsec": 1735689600000000,
+    "createdTimestampUsec": 1735689600000000,
+    "labels": []
+  }
+]
