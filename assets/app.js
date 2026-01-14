@@ -236,36 +236,10 @@ function renderBookmarks() {
 
 // Create bookmark card element
 function createBookmarkCard(bookmark) {
-  const card = document.createElement('article');
+  const card = document.createElement('div');
   card.className = 'bookmark-card';
   card.dataset.id = bookmark.id;
   
-  // Make whole card clickable
-  card.onclick = (e) => {
-    // prevent click if clicking on a button or link
-    if (e.target.closest('button') || e.target.closest('a')) return;
-    openBookmark(bookmark.url);
-  };
-  card.style.cursor = 'pointer';
-
-  // Image
-  const image = bookmark.image
-    ? `<img src="${escapeHtml(bookmark.image)}" alt="" class="bookmark-image" loading="lazy" onerror="this.style.display='none'">`
-    : `<div class="bookmark-image placeholder"><span>${typeIcons[bookmark.content_type] || '📄'}</span></div>`;
-
-  // Favorite Button (SVG)
-  const starIcon = bookmark.is_favorite
-    ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`
-    : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-
-  const favoriteBtn = `
-    <button class="favorite-btn ${bookmark.is_favorite ? 'active' : ''}" 
-            onclick="toggleFavorite(event, '${bookmark.id}')"
-            aria-label="${bookmark.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
-      ${starIcon}
-    </button>
-  `;
-
   // Format date
   const date = new Date(bookmark.timestamp);
   const relativeDate = formatRelativeDate(date);
@@ -278,31 +252,38 @@ function createBookmarkCard(bookmark) {
     domain = bookmark.site_name || '';
   }
 
+  // Favorite Button (SVG)
+  const starIcon = bookmark.is_favorite
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+
   card.innerHTML = `
-    <div class="bookmark-media">
-      ${image}
-      ${favoriteBtn}
-    </div>
     <div class="bookmark-content">
-      <a href="${escapeHtml(bookmark.url)}" target="_blank" rel="noopener" class="bookmark-title">
-        ${escapeHtml(bookmark.title || bookmark.url)}
-      </a>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <a href="${escapeHtml(bookmark.url)}" target="_blank" rel="noopener" class="bookmark-title">
+          ${escapeHtml(bookmark.title || bookmark.url)}
+        </a>
+        <button class="favorite-btn ${bookmark.is_favorite ? 'active' : ''}" 
+                onclick="toggleFavorite(event, '${bookmark.id}')"
+                aria-label="Toggle favorite">
+          ${starIcon}
+        </button>
+      </div>
 
       ${bookmark.description ? `
         <p class="bookmark-description">${escapeHtml(bookmark.description)}</p>
       ` : ''}
 
       <div class="bookmark-metadata">
-        <span>${typeIcons[bookmark.content_type || 'other']}</span>
-        <span>${domain}</span>
-        <span>${relativeDate}</span>
+        <span class="type-icon">${typeIcons[bookmark.content_type || 'other']}</span>
+        <span class="domain">${domain}</span>
+        <span class="date">${relativeDate}</span>
+        ${bookmark.tags && bookmark.tags.length > 0 ? `
+          <div class="bookmark-tags">
+            ${bookmark.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+          </div>
+        ` : ''}
       </div>
-
-      ${bookmark.tags && bookmark.tags.length > 0 ? `
-        <div class="bookmark-tags">
-          ${bookmark.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
-        </div>
-      ` : ''}
     </div>
   `;
 
