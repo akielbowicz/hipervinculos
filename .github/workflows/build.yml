@@ -57,9 +57,9 @@ jobs:
 
       - name: Commit generated files
         run: |
-          git add pagefind/ pages/ data/metadata.json
+          git add data/metadata.json
           git diff --quiet && git diff --staged --quiet || \
-            git commit -m "build: update search index and metadata [skip ci]"
+            git commit -m "build: update metadata statistics [skip ci]"
           git push || true
 
       - name: Setup Pages
