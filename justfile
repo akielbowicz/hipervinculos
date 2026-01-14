@@ -60,6 +60,11 @@ validate:
     @echo "🔍 Validating bookmark data..."
     node scripts/validate-bookmarks.js
 
+# Update metadata statistics
+update-metadata:
+    @echo "📊 Updating metadata..."
+    node scripts/update-metadata.js
+
 # Check for broken external links
 check-links:
     @echo "🔗 Checking external links..."
@@ -178,7 +183,7 @@ docs-api:
 
 # Open spec in default editor
 spec:
-    $EDITOR bookmark-complete-spec.md
+    $EDITOR specs/bookmark-complete-spec.md
 
 # === Quick Actions ===
 
