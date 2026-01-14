@@ -7,15 +7,15 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadData } = require('./data-utils');
 
-const bookmarksPath = path.join(__dirname, '../data/bookmarks.json');
 const metadataPath = path.join(__dirname, '../data/metadata.json');
 
 try {
   console.log('📊 Updating metadata statistics...');
 
   // Load bookmarks
-  const bookmarks = JSON.parse(fs.readFileSync(bookmarksPath, 'utf8'));
+  const bookmarks = loadData('bookmarks.jsonl');
   console.log(`📚 Loaded ${bookmarks.length} bookmarks`);
 
   // Load existing metadata

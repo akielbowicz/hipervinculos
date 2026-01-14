@@ -74,7 +74,7 @@ check-links:
 stats:
     @echo "📊 Bookmark Statistics"
     @echo "======================"
-    @node -e "const data=require('./data/bookmarks.json'); const meta=require('./data/metadata.json'); console.log('Total bookmarks:', meta.total_bookmarks); console.log('Unread:', meta.statistics.by_read_status.unread); console.log('Favorites:', meta.statistics.favorites_count); console.log('Private:', meta.statistics.private_count); console.log(''); console.log('By Type:'); Object.entries(meta.statistics.by_type).forEach(([k,v])=>console.log('  '+k+':', v));"
+    @node -e "const {loadData}=require('./scripts/data-utils'); const data=loadData('bookmarks.jsonl'); const meta=require('./data/metadata.json'); console.log('Total bookmarks:', meta.total_bookmarks); console.log('Unread:', meta.statistics.by_read_status.unread); console.log('Favorites:', meta.statistics.favorites_count); console.log('Private:', meta.statistics.private_count); console.log(''); console.log('By Type:'); Object.entries(meta.statistics.by_type).forEach(([k,v])=>console.log('  '+k+':', v));"
 
 # List all tags with usage counts
 tags:
@@ -86,31 +86,31 @@ tags:
 recent n="10":
     @echo "📚 Recent Bookmarks (last {{n}})"
     @echo "================================"
-    @node -e "const data=require('./data/bookmarks.json'); data.slice(-{{n}}).reverse().forEach(b=>console.log(b.timestamp.slice(0,10)+' - '+b.title+' ('+b.site_name+')'))"
+    @node -e "const {loadData}=require('./scripts/data-utils'); const data=loadData('bookmarks.jsonl'); data.slice(-{{n}}).reverse().forEach(b=>console.log(b.timestamp.slice(0,10)+' - '+b.title+' ('+b.site_name+')'))"
 
 # Search bookmarks by keyword
 search query:
     @echo "🔍 Search results for: {{query}}"
     @echo "================================"
-    @node -e "const data=require('./data/bookmarks.json'); const q='{{query}}'.toLowerCase(); data.filter(b=>b.title.toLowerCase().includes(q)||b.description?.toLowerCase().includes(q)||b.tags.some(t=>t.includes(q))).forEach(b=>console.log('🔖 '+b.title+' ('+b.site_name+')'+'\\n   🔗 '+b.url+'\\n'))"
+    @node -e "const {loadData}=require('./scripts/data-utils'); const data=loadData('bookmarks.jsonl'); const q='{{query}}'.toLowerCase(); data.filter(b=>b.title.toLowerCase().includes(q)||b.description?.toLowerCase().includes(q)||b.tags.some(t=>t.includes(q))).forEach(b=>console.log('🔖 '+b.title+' ('+b.site_name+')'+'\\n   🔗 '+b.url+'\\n'))"
 
 # Find bookmarks by tag
 find-tag tag:
     @echo "🏷️  Bookmarks tagged: {{tag}}"
     @echo "=========================="
-    @node -e "const data=require('./data/bookmarks.json'); data.filter(b=>b.tags.includes('{{tag}}')).forEach(b=>console.log('🔖 '+b.title+'\\n   🔗 '+b.url+'\\n'))"
+    @node -e "const {loadData}=require('./scripts/data-utils'); const data=loadData('bookmarks.jsonl'); data.filter(b=>b.tags.includes('{{tag}}')).forEach(b=>console.log('🔖 '+b.title+'\\n   🔗 '+b.url+'\\n'))"
 
 # List unread bookmarks
 unread:
     @echo "📭 Unread Bookmarks"
     @echo "=================="
-    @node -e "const data=require('./data/bookmarks.json'); data.filter(b=>b.read_status==='unread').slice(-20).reverse().forEach(b=>console.log('🔖 '+b.title+' ('+b.site_name+')'))"
+    @node -e "const {loadData}=require('./scripts/data-utils'); const data=loadData('bookmarks.jsonl'); data.filter(b=>b.read_status==='unread').slice(-20).reverse().forEach(b=>console.log('🔖 '+b.title+' ('+b.site_name+')'))"
 
 # List favorite bookmarks
 favorites:
     @echo "⭐ Favorite Bookmarks"
     @echo "===================="
-    @node -e "const data=require('./data/bookmarks.json'); data.filter(b=>b.is_favorite).reverse().forEach(b=>console.log('🔖 '+b.title+' ('+b.site_name+')'))"
+    @node -e "const {loadData}=require('./scripts/data-utils'); const data=loadData('bookmarks.jsonl'); data.filter(b=>b.is_favorite).reverse().forEach(b=>console.log('🔖 '+b.title+' ('+b.site_name+')'))"
 
 # === Import/Export ===
 
@@ -213,7 +213,7 @@ size:
     @echo "📏 Repository Size"
     @echo "=================="
     @echo -n "Bookmarks data: "
-    @du -h data/bookmarks.json | cut -f1
+    @du -h data/bookmarks.jsonl | cut -f1
     @echo -n "Pages: "
     @du -sh pages/ 2>/dev/null | cut -f1 || echo "Not built yet"
     @echo -n "Pagefind index: "
@@ -226,7 +226,7 @@ health:
     @echo "🏥 System Health Check"
     @echo "====================="
     @echo -n "Data files: "
-    @test -f data/bookmarks.json && test -f data/metadata.json && test -f data/tags.json && echo "✅" || echo "❌"
+    @test -f data/bookmarks.jsonl && test -f data/metadata.json && test -f data/tags.jsonl && echo "✅" || echo "❌"
     @echo -n "Node modules: "
     @test -d node_modules && echo "✅" || echo "❌ (run: just setup)"
     @echo -n "Pagefind: "

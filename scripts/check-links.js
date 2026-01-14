@@ -11,8 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const http = require('http');
-
-const bookmarksPath = path.join(__dirname, '../data/bookmarks.json');
+const { loadData } = require('./data-utils');
 
 function checkUrl(url) {
   return new Promise((resolve) => {
@@ -64,7 +63,7 @@ async function checkLinks() {
   console.log('');
 
   try {
-    const bookmarks = JSON.parse(fs.readFileSync(bookmarksPath, 'utf8'));
+    const bookmarks = loadData('bookmarks.jsonl');
     console.log(`📚 Checking ${bookmarks.length} bookmarks`);
     console.log('');
 

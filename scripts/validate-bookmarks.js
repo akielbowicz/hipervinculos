@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadData } = require('./data-utils');
 
 // ANSI color codes
 const colors = {
@@ -57,8 +58,7 @@ class Validator {
   loadData() {
     try {
       // Load bookmarks
-      const bookmarksPath = path.join(__dirname, '../data/bookmarks.json');
-      this.bookmarks = JSON.parse(fs.readFileSync(bookmarksPath, 'utf8'));
+      this.bookmarks = loadData('bookmarks.jsonl');
       this.info(`Loaded ${this.bookmarks.length} bookmarks`);
 
       // Load metadata
@@ -67,8 +67,7 @@ class Validator {
       this.info('Loaded metadata');
 
       // Load tags
-      const tagsPath = path.join(__dirname, '../data/tags.json');
-      this.tags = JSON.parse(fs.readFileSync(tagsPath, 'utf8'));
+      this.tags = { tags: loadData('tags.jsonl') };
       this.info(`Loaded ${this.tags.tags?.length || 0} tag definitions`);
 
       return true;
