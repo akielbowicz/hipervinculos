@@ -1,11 +1,11 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1,
-  "last_updated": "2026-01-14T23:06:51.061Z",
+  "total_bookmarks": 1130,
+  "last_updated": "2026-01-15T00:10:07.709Z",
   "last_bookmark_id": "e90d26a6-342f-4f04-a70c-fd9ce804bf30",
   "statistics": {
     "by_type": {
-      "article": 0,
+      "article": 1129,
       "video": 0,
       "image": 0,
       "pdf": 0,
@@ -14,13 +14,13 @@
       "other": 0
     },
     "by_read_status": {
-      "unread": 1,
+      "unread": 1130,
       "reading": 0,
       "read": 0
     },
     "favorites_count": 0,
     "private_count": 0,
-    "archived_count": 0
+    "archived_count": 450
   },
   "tags_usage": {
     "prompting": 1,
