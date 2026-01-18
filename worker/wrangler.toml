@@ -1,7 +1,7 @@
 name = "hipervinculos-worker"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
-node_compat = true
+compatibility_flags = ["nodejs_compat"]
 
 # Cron Triggers (Hourly)
 [triggers]
@@ -10,9 +10,8 @@ crons = ["0 * * * *"]
 # KV Namespaces (IDs will be replaced by real ones after `wrangler kv:namespace create`)
 # For dev/preview, we use placeholders or binding names directly.
 [[kv_namespaces]]
-binding = "KV_BOOKMARKS"
-id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-preview_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+binding = "RETRY_QUEUE"
+id = "5848ceff29f14abfbb0f8c6d81162815"
 
 [vars]
 GITHUB_OWNER = "akielbowicz"
