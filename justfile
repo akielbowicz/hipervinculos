@@ -55,6 +55,10 @@ worker-dev:
 
 # === Data Management ===
 
+# Add a bookmark locally
+add url title="":
+    @node scripts/add-bookmark.js "{{url}}" "{{title}}"
+
 # Validate bookmark data integrity
 validate:
     @echo "🔍 Validating bookmark data..."
