@@ -59,6 +59,10 @@ worker-dev:
 add url title="":
     @node scripts/add-bookmark.js "{{url}}" "{{title}}"
 
+# Split bookmarks with multiple URLs (dry run by default)
+split-bookmarks *args="":
+    @node scripts/split-bookmarks.js {{args}}
+
 # Validate bookmark data integrity
 validate:
     @echo "🔍 Validating bookmark data..."
