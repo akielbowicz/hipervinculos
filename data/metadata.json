@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1312,
-  "last_updated": "2026-01-19T03:30:32.230Z",
+  "total_bookmarks": 1313,
+  "last_updated": "2026-01-19T03:37:25.841Z",
   "last_bookmark_id": "f2b192b4-0774-444a-80b1-6c11e133a5e2",
   "statistics": {
     "by_type": {
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 3
+      "other": 4
     },
     "by_read_status": {
-      "unread": 1312,
+      "unread": 1313,
       "reading": 0,
       "read": 0
     },
