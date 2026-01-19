@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "total_bookmarks": 1133,
-  "last_updated": "2026-01-19T02:58:34.592Z",
+  "last_updated": "2026-01-19T03:05:22.831Z",
   "last_bookmark_id": "f2b192b4-0774-444a-80b1-6c11e133a5e2",
   "statistics": {
     "by_type": {
@@ -23,10 +23,26 @@
     "archived_count": 450
   },
   "tags_usage": {
-    "prompting": 1,
-    "llm": 1,
     "cli": 1,
+    "devtools": 77,
+    "github": 214,
+    "llm": 1,
+    "prompting": 1,
+    "reference": 1,
     "tools": 1,
-    "reference": 1
+    "python": 110,
+    "visualization": 62,
+    "design": 238,
+    "data": 36,
+    "tutorial": 282,
+    "haskell": 26,
+    "video": 46,
+    "architecture": 16,
+    "javascript": 26,
+    "machine-learning": 53,
+    "clojure": 38,
+    "julia": 28,
+    "rust": 15,
+    "go": 1
   }
 }

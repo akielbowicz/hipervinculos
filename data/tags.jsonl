@@ -1,9 +1,21 @@
-{"name":"javascript","color":"#f7df1e","description":"JavaScript programming language"}
-{"name":"python","color":"#3776ab","description":"Python programming language"}
-{"name":"tutorial","color":"#10b981","description":"Tutorial and learning resources"}
-{"name":"reference","color":"#6366f1","description":"Reference documentation"}
-{"name":"tools","color":"#8b5cf6","description":"Development tools and utilities"}
-{"name":"design","color":"#ec4899","description":"Design resources and inspiration"}
-{"name":"prompting","color":"#64748b","description":"Auto-generated tag"}
-{"name":"llm","color":"#64748b","description":"Auto-generated tag"}
+{"name":"architecture","color":"#0ea5e9","description":"System architecture and design"}
 {"name":"cli","color":"#64748b","description":"Auto-generated tag"}
+{"name":"clojure","color":"#5881d8","description":"Clojure programming language"}
+{"name":"data","color":"#10b981","description":"Data engineering and science"}
+{"name":"design","color":"#ec4899","description":"Design and UI/UX"}
+{"name":"devtools","color":"#64748b","description":"Developer tools and CLI"}
+{"name":"github","color":"#333333","description":"GitHub repositories and gists"}
+{"name":"go","color":"#00add8","description":"Go programming language"}
+{"name":"haskell","color":"#5e5086","description":"Haskell programming language"}
+{"name":"javascript","color":"#f7df1e","description":"JavaScript and TypeScript"}
+{"name":"julia","color":"#9558b2","description":"Julia programming language"}
+{"name":"llm","color":"#64748b","description":"Auto-generated tag"}
+{"name":"machine-learning","color":"#ff6f61","description":"Machine learning and AI"}
+{"name":"prompting","color":"#64748b","description":"Auto-generated tag"}
+{"name":"python","color":"#3776ab","description":"Python programming language"}
+{"name":"reference","color":"#64748b","description":"Auto-generated tag"}
+{"name":"rust","color":"#dea584","description":"Rust programming language"}
+{"name":"tools","color":"#64748b","description":"Auto-generated tag"}
+{"name":"tutorial","color":"#22c55e","description":"Tutorials and learning resources"}
+{"name":"video","color":"#ef4444","description":"Video content"}
+{"name":"visualization","color":"#8b5cf6","description":"Data visualization"}
