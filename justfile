@@ -1,6 +1,8 @@
 # Justfile for Hipervínculos Bookmark Manager
 # Run `just` or `just --list` to see available commands
 
+set dotenv-load
+
 # Default recipe (show help)
 default:
     @just --list
@@ -51,7 +53,7 @@ dev: build serve
 # Run Cloudflare Worker locally
 worker-dev:
     @echo "⚡ Starting Worker in development mode..."
-    cd worker && wrangler dev
+    cd worker && npx wrangler dev
 
 # === Data Management ===
 
@@ -137,17 +139,17 @@ export format output:
 # Deploy Cloudflare Worker to production
 worker-deploy:
     @echo "🚀 Deploying Worker to Cloudflare..."
-    cd worker && wrangler deploy
+    cd worker && npx wrangler deploy
     @echo "✅ Worker deployed!"
 
 # Set Worker secret (example: just worker-secret TELEGRAM_BOT_TOKEN)
 worker-secret name:
     @echo "🔐 Setting secret: {{name}}"
-    cd worker && wrangler secret put {{name}}
+    cd worker && npx wrangler secret put {{name}}
 
 # Show Worker logs
 worker-logs:
-    cd worker && wrangler tail
+    cd worker && npx wrangler tail
 
 # === Git & Versioning ===
 
@@ -240,7 +242,7 @@ health:
     @echo -n "Pagefind: "
     @which pagefind > /dev/null && echo "✅" || echo "❌ (run: just setup-pagefind)"
     @echo -n "Wrangler: "
-    @which wrangler > /dev/null && echo "✅" || echo "❌ (run: just setup-wrangler)"
+    @(cd worker && npx wrangler --version > /dev/null 2>&1) && echo "✅" || echo "❌ (run: npm install in worker/)"
     @echo -n "Worker config: "
     @test -f worker/wrangler.toml && echo "✅" || echo "❌"
     @echo ""
