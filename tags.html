@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Bookmark activity visualization">
-  <title>Hipervínculos - Activity</title>
+  <meta name="description" content="Browse bookmarks by tag">
+  <title>Hipervínculos - Tags</title>
   <link rel="stylesheet" href="assets/styles.css">
-  <link rel="stylesheet" href="assets/activity.css">
+  <link rel="stylesheet" href="assets/tags.css">
 </head>
 <body>
   <div class="container">
@@ -16,22 +16,22 @@
         <a href="index.html" class="logo">Hipervínculos</a>
         <nav class="header-nav">
           <a href="index.html" class="nav-link">Bookmarks</a>
-          <a href="tags.html" class="nav-link">Tags</a>
-          <a href="activity.html" class="nav-link active">Activity</a>
+          <a href="tags.html" class="nav-link active">Tags</a>
+          <a href="activity.html" class="nav-link">Activity</a>
         </nav>
       </div>
     </header>
 
-    <!-- Activity Stats -->
-    <div class="activity-stats" id="activity-stats">
-      <span id="total-count">Loading...</span>
+    <!-- Stats -->
+    <div class="stats-bar" id="stats-bar">
+      <span id="tag-count">Loading...</span>
     </div>
 
-    <!-- Activity Grid -->
-    <main class="activity-container" id="activity-container">
+    <!-- Tags List -->
+    <main class="tags-container" id="tags-container">
       <div class="loading">
         <div class="loading-spinner"></div>
-        <p>Loading activity...</p>
+        <p>Loading tags...</p>
       </div>
     </main>
 
@@ -47,6 +47,6 @@
     </footer>
   </div>
 
-  <script src="assets/activity.js" type="module"></script>
+  <script src="assets/tags.js" type="module"></script>
 </body>
 </html>

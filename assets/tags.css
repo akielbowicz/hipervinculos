@@ -1,0 +1,107 @@
+/* Tags page styles */
+
+.tags-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tag-group {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tag-group:last-child {
+  border-bottom: none;
+}
+
+.tag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tag-header:hover .tag-name {
+  color: var(--text-primary);
+}
+
+.tag-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tag-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.tag-name::before {
+  content: '#';
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.tag-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.tag-toggle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.tag-group.expanded .tag-toggle {
+  transform: rotate(90deg);
+}
+
+.tag-bookmarks {
+  display: none;
+  padding-bottom: 1rem;
+}
+
+.tag-group.expanded .tag-bookmarks {
+  display: block;
+}
+
+.tag-bookmark {
+  padding: 0.75rem 0 0.75rem 1rem;
+  border-left: 1px solid var(--border-color);
+  margin-left: 0.25rem;
+}
+
+.tag-bookmark:first-child {
+  padding-top: 0;
+}
+
+.tag-bookmark-title {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.tag-bookmark-title:hover {
+  text-decoration: underline;
+}
+
+.tag-bookmark-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 0.75rem;
+}
+
+.empty-tags {
+  padding: 4rem 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
