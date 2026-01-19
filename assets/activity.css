@@ -1,0 +1,272 @@
+/* Activity Page Styles */
+
+.header-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+/* Activity Stats */
+.activity-stats {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+/* Activity Container */
+.activity-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Year Row */
+.year-row {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.year-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.year-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 4ch;
+}
+
+.year-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Month Grid (12 cells) */
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+}
+
+.month-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.1s;
+  position: relative;
+}
+
+.month-cell:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+.month-cell.selected {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 1px;
+}
+
+/* Heat levels (grayscale) */
+.heat-0 { background-color: var(--border-color); }
+.heat-1 { background-color: #cccccc; }
+.heat-2 { background-color: #999999; }
+.heat-3 { background-color: #666666; }
+.heat-4 { background-color: #333333; }
+
+@media (prefers-color-scheme: dark) {
+  .heat-0 { background-color: #161b22; }
+  .heat-1 { background-color: #333333; }
+  .heat-2 { background-color: #555555; }
+  .heat-3 { background-color: #888888; }
+  .heat-4 { background-color: #cccccc; }
+}
+
+/* Tooltip */
+.month-cell[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 4px;
+}
+
+/* Month Detail (expanded view) */
+.month-detail {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .month-detail {
+    background: #161b22;
+  }
+}
+
+.month-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.month-detail-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.month-detail-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.month-detail-close:hover {
+  color: var(--text-primary);
+}
+
+/* Week labels */
+.week-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.week-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Days Grid (weeks as rows, days as columns) */
+.days-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.day-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.day-cell:not(.empty):hover {
+  transform: scale(1.2);
+}
+
+.day-cell.empty {
+  background: transparent !important;
+  cursor: default;
+}
+
+.day-cell[data-tooltip]:not(.empty):hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 4px;
+}
+
+/* Bookmarks list for day */
+.day-bookmarks {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.day-bookmarks-header {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.day-bookmark-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.day-bookmark-item:last-child {
+  border-bottom: none;
+}
+
+.day-bookmark-link {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.day-bookmark-link:hover {
+  text-decoration: underline;
+}
+
+.day-bookmark-domain {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-left: 0.5rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .months-grid {
+    gap: 2px;
+  }
+  
+  .week-row {
+    gap: 2px;
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bookmark activity visualization">
+  <title>Hipervínculos - Activity</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/activity.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <a href="index.html" class="logo">Hipervínculos</a>
+        <nav class="header-nav">
+          <a href="index.html" class="nav-link">Bookmarks</a>
+          <a href="activity.html" class="nav-link active">Activity</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Activity Stats -->
+    <div class="activity-stats" id="activity-stats">
+      <span id="total-count">Loading...</span>
+    </div>
+
+    <!-- Activity Grid -->
+    <main class="activity-container" id="activity-container">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading activity...</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        <a href="https://github.com/yourusername/hipervinculos" target="_blank" rel="noopener">
+          GitHub
+        </a>
+        •
+        <a href="index.html">Back to bookmarks</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="assets/activity.js" type="module"></script>
+</body>
+</html>
