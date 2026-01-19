@@ -16,6 +16,57 @@ const state = {
   itemsPerPage: 50
 };
 
+// Valid values for URL params
+const validFilters = ['all', 'unread', 'favorites'];
+const validTypes = ['', 'article', 'video', 'code', 'image', 'tweet', 'pdf', 'other'];
+const validSorts = ['newest', 'oldest', 'title'];
+
+// Parse URL query params into state values
+function getQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    searchQuery: params.get('q') || '',
+    currentFilter: validFilters.includes(params.get('filter')) ? params.get('filter') : 'all',
+    currentType: validTypes.includes(params.get('type')) ? params.get('type') : '',
+    currentSort: validSorts.includes(params.get('sort')) ? params.get('sort') : 'newest'
+  };
+}
+
+// Update URL with current state (without adding to history)
+function updateQueryParams() {
+  const params = new URLSearchParams();
+
+  if (state.searchQuery) params.set('q', state.searchQuery);
+  if (state.currentFilter !== 'all') params.set('filter', state.currentFilter);
+  if (state.currentType) params.set('type', state.currentType);
+  if (state.currentSort !== 'newest') params.set('sort', state.currentSort);
+
+  const queryString = params.toString();
+  const newURL = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
+
+  history.replaceState(null, '', newURL);
+}
+
+// Sync UI elements with current state
+function syncUIFromState() {
+  // Search input
+  const searchInput = document.getElementById('search');
+  const searchClear = document.getElementById('search-clear');
+  searchInput.value = state.searchQuery;
+  searchClear.classList.toggle('visible', state.searchQuery.length > 0);
+
+  // Filter buttons
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === state.currentFilter);
+  });
+
+  // Type dropdown
+  document.getElementById('type-filter').value = state.currentType;
+
+  // Sort dropdown
+  document.getElementById('sort-select').value = state.currentSort;
+}
+
 // Content type icons
 const typeIcons = {
   article: '📄',
@@ -31,6 +82,10 @@ const typeIcons = {
 async function init() {
   console.log('🚀 Initializing Hipervínculos...');
 
+  // Restore state from URL query params
+  const urlState = getQueryParams();
+  Object.assign(state, urlState);
+
   // Load bookmarks
   await loadBookmarks();
 
@@ -40,8 +95,19 @@ async function init() {
   // Setup keyboard shortcuts
   setupKeyboardShortcuts();
 
+  // Sync UI with restored state
+  syncUIFromState();
+
   // Apply initial filters and render (ensures proper sorting)
   applyFilters();
+
+  // Handle browser back/forward navigation
+  window.addEventListener('popstate', () => {
+    const urlState = getQueryParams();
+    Object.assign(state, urlState);
+    syncUIFromState();
+    applyFilters();
+  });
 
   console.log('✅ App initialized');
 }
@@ -192,6 +258,7 @@ function applyFilters() {
   state.filteredBookmarks = filtered;
   renderBookmarks();
   updateStats();
+  updateQueryParams();
 }
 
 // Render bookmarks to DOM
