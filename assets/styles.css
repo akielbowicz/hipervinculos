@@ -48,6 +48,28 @@ body {
   align-items: center;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
 .logo {
   font-size: 0.9rem;
   font-weight: 700;
