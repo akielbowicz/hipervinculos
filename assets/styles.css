@@ -244,3 +244,26 @@ body {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Load More Button */
+.load-more-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.load-more-btn:hover,
+.load-more-btn:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+  outline: none;
+}

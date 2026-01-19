@@ -11,7 +11,9 @@ const state = {
   currentType: '',
   currentSort: 'newest',
   searchQuery: '',
-  loading: true
+  loading: true,
+  displayedCount: 0,
+  itemsPerPage: 50
 };
 
 // Content type icons
@@ -38,11 +40,8 @@ async function init() {
   // Setup keyboard shortcuts
   setupKeyboardShortcuts();
 
-  // Render initial view
-  renderBookmarks();
-
-  // Update stats
-  updateStats();
+  // Apply initial filters and render (ensures proper sorting)
+  applyFilters();
 
   console.log('✅ App initialized');
 }
@@ -196,7 +195,7 @@ function applyFilters() {
 }
 
 // Render bookmarks to DOM
-function renderBookmarks() {
+function renderBookmarks(append = false) {
   const grid = document.getElementById('bookmarks-grid');
   const emptyState = document.getElementById('empty-state');
 
@@ -204,12 +203,16 @@ function renderBookmarks() {
     return; // Show loading spinner
   }
 
-  // Clear loading state
-  grid.innerHTML = '';
+  // Clear grid if not appending
+  if (!append) {
+    grid.innerHTML = '';
+    state.displayedCount = 0;
+  }
 
   // Show empty state if no bookmarks
   if (state.filteredBookmarks.length === 0) {
     emptyState.classList.remove('hidden');
+    removeLoadMoreButton();
     const message = document.getElementById('empty-message');
 
     if (state.searchQuery) {
@@ -227,11 +230,51 @@ function renderBookmarks() {
 
   emptyState.classList.add('hidden');
 
+  // Get the next batch of bookmarks
+  const startIndex = state.displayedCount;
+  const endIndex = Math.min(startIndex + state.itemsPerPage, state.filteredBookmarks.length);
+  const batch = state.filteredBookmarks.slice(startIndex, endIndex);
+
   // Render bookmark cards
-  state.filteredBookmarks.forEach(bookmark => {
+  batch.forEach(bookmark => {
     const card = createBookmarkCard(bookmark);
     grid.appendChild(card);
   });
+
+  state.displayedCount = endIndex;
+
+  // Show or hide "Load more" button
+  if (state.displayedCount < state.filteredBookmarks.length) {
+    showLoadMoreButton();
+  } else {
+    removeLoadMoreButton();
+  }
+}
+
+// Show "Load more" button
+function showLoadMoreButton() {
+  let btn = document.getElementById('load-more-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'load-more-btn';
+    btn.className = 'load-more-btn';
+    btn.addEventListener('click', () => {
+      renderBookmarks(true);
+      updateStats();
+    });
+    const grid = document.getElementById('bookmarks-grid');
+    grid.parentNode.insertBefore(btn, grid.nextSibling);
+  }
+  const remaining = state.filteredBookmarks.length - state.displayedCount;
+  btn.textContent = `Load more (${remaining} remaining)`;
+}
+
+// Remove "Load more" button
+function removeLoadMoreButton() {
+  const btn = document.getElementById('load-more-btn');
+  if (btn) {
+    btn.remove();
+  }
 }
 
 // Create bookmark card element
@@ -296,12 +339,21 @@ function updateStats() {
   const resultsEl = document.getElementById('search-results');
 
   const total = state.bookmarks.length;
-  const shown = state.filteredBookmarks.length;
+  const filtered = state.filteredBookmarks.length;
+  const displayed = state.displayedCount;
 
   if (state.searchQuery || state.currentFilter !== 'all' || state.currentType) {
-    countEl.textContent = `Showing ${shown} of ${total} bookmarks`;
+    if (displayed < filtered) {
+      countEl.textContent = `Showing ${displayed} of ${filtered} (${total} total)`;
+    } else {
+      countEl.textContent = `Showing ${filtered} of ${total} bookmarks`;
+    }
   } else {
-    countEl.textContent = `${total} bookmarks`;
+    if (displayed < filtered) {
+      countEl.textContent = `Showing ${displayed} of ${total} bookmarks`;
+    } else {
+      countEl.textContent = `${total} bookmarks`;
+    }
   }
 
   if (state.searchQuery) {
@@ -318,7 +370,16 @@ window.toggleFavorite = function(event, id) {
   const bookmark = state.bookmarks.find(b => b.id === id);
   if (bookmark) {
     bookmark.is_favorite = !bookmark.is_favorite;
-    renderBookmarks();
+
+    // Update card in-place to preserve pagination/scroll position
+    const card = document.querySelector(`.bookmark-card[data-id="${id}"]`);
+    if (card) {
+      const btn = card.querySelector('.favorite-btn');
+      btn.classList.toggle('active', bookmark.is_favorite);
+      btn.innerHTML = bookmark.is_favorite
+        ? `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+    }
     // TODO: Call API to persist change
   }
 };
