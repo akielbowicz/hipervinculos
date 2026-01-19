@@ -41,9 +41,6 @@ jobs:
       - name: Install Pagefind
         run: npm install -g pagefind
 
-      - name: Auto-tag bookmarks
-        run: node scripts/auto-tag.js --apply
-
       - name: Generate HTML pages from bookmarks
         run: node scripts/generate-pages.js
 
@@ -60,9 +57,9 @@ jobs:
 
       - name: Commit generated files
         run: |
-          git add data/metadata.json data/bookmarks.jsonl data/tags.jsonl
+          git add data/metadata.json
           git diff --quiet && git diff --staged --quiet || \
-            git commit -m "build: auto-tag and update metadata [skip ci]"
+            git commit -m "build: update metadata [skip ci]"
           git push || true
 
       - name: Setup Pages
