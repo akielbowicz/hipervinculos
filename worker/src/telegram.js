@@ -96,7 +96,7 @@ export async function handleUpdate(update, env) {
     image: metadata.image || undefined,
     tags: [],
     source: 'telegram',
-    created_at: new Date().toISOString(),
+    timestamp: new Date().toISOString(),
     chat_id: chatId,
   };
 
