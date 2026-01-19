@@ -75,25 +75,26 @@ function render() {
   const sortedTags = [...state.tagMap.entries()]
     .sort((a, b) => b[1].length - a[1].length);
 
+  // Find untagged bookmarks
+  const untaggedBookmarks = state.bookmarks
+    .filter(b => !b.tags || b.tags.length === 0)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
   // Update stats
   const totalTags = sortedTags.length;
-  const taggedBookmarks = new Set(
-    state.bookmarks
-      .filter(b => b.tags && b.tags.length > 0)
-      .map(b => b.id)
-  ).size;
-  statsEl.textContent = `${totalTags} tags · ${taggedBookmarks} tagged bookmarks`;
+  const taggedCount = state.bookmarks.length - untaggedBookmarks.length;
+  statsEl.textContent = `${totalTags} tags · ${taggedCount} tagged · ${untaggedBookmarks.length} untagged`;
 
-  if (sortedTags.length === 0) {
+  if (sortedTags.length === 0 && untaggedBookmarks.length === 0) {
     container.innerHTML = `
       <div class="empty-tags">
-        <p>No tagged bookmarks yet</p>
+        <p>No bookmarks yet</p>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = sortedTags.map(([tag, bookmarks]) => `
+  let html = sortedTags.map(([tag, bookmarks]) => `
     <div class="tag-group" data-tag="${escapeHtml(tag)}">
       <div class="tag-header" onclick="toggleTag('${escapeHtml(tag)}')">
         <div class="tag-info">
@@ -107,6 +108,26 @@ function render() {
       </div>
     </div>
   `).join('');
+
+  // Add untagged section at the end
+  if (untaggedBookmarks.length > 0) {
+    html += `
+    <div class="tag-group untagged" data-tag="untagged">
+      <div class="tag-header" onclick="toggleTag('untagged')">
+        <div class="tag-info">
+          <span class="tag-name untagged-label">untagged</span>
+          <span class="tag-count">${untaggedBookmarks.length}</span>
+        </div>
+        <span class="tag-toggle">›</span>
+      </div>
+      <div class="tag-bookmarks">
+        ${untaggedBookmarks.map(b => renderBookmark(b)).join('')}
+      </div>
+    </div>
+    `;
+  }
+
+  container.innerHTML = html;
 }
 
 function renderBookmark(bookmark) {
