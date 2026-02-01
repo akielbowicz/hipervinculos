@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1319,
-  "last_updated": "2026-01-30T10:48:41.217Z",
-  "last_bookmark_id": "2d6b4905-def0-4e0d-b3b8-810c879b5f8e",
+  "total_bookmarks": 1320,
+  "last_updated": "2026-02-01T19:42:50.879Z",
+  "last_bookmark_id": "a2df833a-905f-4f86-ab43-550244cb7849",
   "statistics": {
     "by_type": {
       "article": 1036,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 10
+      "other": 11
     },
     "by_read_status": {
-      "unread": 1319,
+      "unread": 1320,
       "reading": 0,
       "read": 0
     },
@@ -34,10 +34,10 @@
     "visualization": 86,
     "design": 289,
     "data": 46,
-    "tutorial": 362,
+    "tutorial": 363,
     "haskell": 42,
     "video": 66,
-    "architecture": 16,
+    "architecture": 17,
     "javascript": 37,
     "machine-learning": 62,
     "clojure": 41,
