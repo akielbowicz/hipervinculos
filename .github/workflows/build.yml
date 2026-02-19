@@ -41,6 +41,9 @@ jobs:
       - name: Install Pagefind
         run: npm install -g pagefind
 
+      - name: Backfill missing metadata
+        run: node scripts/backfill-metadata.js --limit 10 --delay 500
+
       - name: Generate HTML pages from bookmarks
         run: node scripts/generate-pages.js
 
@@ -57,7 +60,7 @@ jobs:
 
       - name: Commit generated files
         run: |
-          git add data/metadata.json
+          git add data/metadata.json data/bookmarks.jsonl
           git diff --quiet && git diff --staged --quiet || \
             git commit -m "build: update metadata [skip ci]"
           git push || true
