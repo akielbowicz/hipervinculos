@@ -105,6 +105,28 @@ function extractSiteName(url) {
 }
 
 /**
+ * Extract title from PDF binary buffer.
+ * Tries XMP metadata first, then the traditional /Info dictionary.
+ */
+function extractPdfTitle(buffer) {
+  const text = buffer.toString('latin1');
+
+  // XMP metadata (XML-based, usually appears early in the file)
+  const xmpMatch = text.match(/<dc:title>\s*<rdf:Alt[^>]*>\s*<rdf:li[^>]*>([^<]{1,200})<\/rdf:li>/i);
+  if (xmpMatch) return xmpMatch[1].trim();
+
+  // Traditional PDF /Info dictionary: /Title (text)
+  const infoMatch = text.match(/\/Title\s*\(([^)]{1,200})\)/);
+  if (infoMatch) {
+    // Strip non-printable bytes that would indicate binary/encoded content
+    const title = infoMatch[1].replace(/[\x00-\x1F\x80-\xFF]/g, '').trim();
+    if (title.length > 2) return title;
+  }
+
+  return null;
+}
+
+/**
  * Fetch metadata from a URL using native fetch (Node 18+)
  */
 async function fetchMetadata(url) {
@@ -128,8 +150,17 @@ async function fetchMetadata(url) {
       return { partial: true, error: `HTTP ${response.status}` };
     }
 
-    const html = await response.text();
     const finalUrl = response.url || url;
+
+    // Handle PDF responses: parse binary metadata instead of HTML
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/pdf') || url.toLowerCase().endsWith('.pdf')) {
+      const buffer = Buffer.from(await response.arrayBuffer());
+      const title = extractPdfTitle(buffer);
+      return { title: title || undefined, url: finalUrl };
+    }
+
+    const html = await response.text();
 
     // Simple regex-based extraction (no cheerio dependency in scripts)
     const getMetaContent = (html, property) => {
