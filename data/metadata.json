@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1346,
-  "last_updated": "2026-03-19T11:38:13.530Z",
-  "last_bookmark_id": "20fbbd50-59ba-4ca1-b3ff-04df04bcc6b2",
+  "total_bookmarks": 1347,
+  "last_updated": "2026-03-19T17:37:06.218Z",
+  "last_bookmark_id": "e9fc117a-d646-4c8c-a8e6-cfbceaeeb5f6",
   "statistics": {
     "by_type": {
       "article": 1037,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 36
+      "other": 37
     },
     "by_read_status": {
-      "unread": 1346,
+      "unread": 1347,
       "reading": 0,
       "read": 0
     },
