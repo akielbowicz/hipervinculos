@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1350,
-  "last_updated": "2026-04-02T16:58:40.114Z",
-  "last_bookmark_id": "dafe1434-14e3-4259-8902-e14b98ea9f56",
+  "total_bookmarks": 1351,
+  "last_updated": "2026-04-06T15:21:30.502Z",
+  "last_bookmark_id": "375af34f-a31d-4622-97e5-035ece3d4340",
   "statistics": {
     "by_type": {
       "article": 1037,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 40
+      "other": 41
     },
     "by_read_status": {
-      "unread": 1350,
+      "unread": 1351,
       "reading": 0,
       "read": 0
     },
@@ -25,7 +25,7 @@
   "tags_usage": {
     "cli": 1,
     "devtools": 106,
-    "github": 259,
+    "github": 260,
     "llm": 1,
     "prompting": 1,
     "reference": 1,
