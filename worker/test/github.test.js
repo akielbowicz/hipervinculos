@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GitHubAdapter } from '../src/github.js';
+import { GitHubAdapter, normalizeUrl } from '../src/github.js';
 
 // Mock Octokit
 const mockGetContent = vi.fn();
@@ -17,6 +17,14 @@ vi.mock('@octokit/rest', () => {
       }
     },
   };
+});
+
+describe('normalizeUrl', () => {
+  it('should normalize equivalent URLs', () => {
+    expect(normalizeUrl('https://github.com/michaelwhitford/nucleus/')).toBe(
+      'https://github.com/michaelwhitford/nucleus'
+    );
+  });
 });
 
 describe('GitHubAdapter', () => {
@@ -77,8 +85,11 @@ describe('GitHubAdapter', () => {
       // Mock successful update
       mockCreateOrUpdate.mockResolvedValue({ status: 200 });
 
-      const newBookmark = { id: '2', title: 'New' };
-      await adapter.saveBookmark(newBookmark);
+      const result = await adapter.saveBookmark({
+        id: '2',
+        title: 'New',
+        url: 'https://example.com/new/',
+      });
 
       expect(mockCreateOrUpdate).toHaveBeenCalledWith(expect.objectContaining({
         owner: 'user',
@@ -88,12 +99,46 @@ describe('GitHubAdapter', () => {
         sha: 'sha-1',
         // Content should be base64 of line 1 + line 2
       }));
+      expect(result).toEqual(expect.objectContaining({ status: 'created' }));
       
       // Verify content decoding
       const callArgs = mockCreateOrUpdate.mock.calls[0][0];
       const decoded = Buffer.from(callArgs.content, 'base64').toString('utf8');
       expect(decoded).toContain('{"id":"1"}');
-      expect(decoded).toContain('{"id":"2","title":"New"}');
+      expect(decoded).toContain('"id":"2"');
+      expect(decoded).toContain('"url":"https://example.com/new/"');
+      expect(decoded).toContain('"url_normalized":"https://example.com/new"');
+      expect(decoded).toContain('"url_hash":');
+    });
+
+    it('should skip duplicates based on normalized URL', async () => {
+      mockGetContent.mockResolvedValue({
+        data: {
+          content: Buffer.from(JSON.stringify({
+            id: '1',
+            title: 'Existing',
+            url: 'https://github.com/michaelwhitford/nucleus',
+            url_normalized: 'https://github.com/michaelwhitford/nucleus',
+            url_hash: 'existing-hash',
+          })).toString('base64'),
+          sha: 'sha-1'
+        }
+      });
+
+      const result = await adapter.saveBookmark({
+        id: '2',
+        title: 'Duplicate',
+        url: 'https://github.com/michaelwhitford/nucleus/',
+      });
+
+      expect(result).toEqual({
+        status: 'duplicate',
+        bookmark: expect.objectContaining({
+          id: '1',
+          url: 'https://github.com/michaelwhitford/nucleus',
+        }),
+      });
+      expect(mockCreateOrUpdate).not.toHaveBeenCalled();
     });
 
     it('should retry on 409 Conflict', async () => {
@@ -113,7 +158,7 @@ describe('GitHubAdapter', () => {
       // Second write: Success
       mockCreateOrUpdate.mockResolvedValueOnce({ status: 200 });
 
-      await adapter.saveBookmark({ id: '1', title: 'Retry' });
+      await adapter.saveBookmark({ id: '1', title: 'Retry', url: 'https://example.com/retry' });
 
       expect(mockCreateOrUpdate).toHaveBeenCalledTimes(2);
       expect(mockGetContent).toHaveBeenCalledTimes(2);

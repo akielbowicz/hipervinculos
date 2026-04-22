@@ -104,7 +104,16 @@ export async function handleUpdate(update, env) {
   const github = new GitHubAdapter(env);
 
   try {
-    await github.saveBookmark(bookmark);
+    const result = await github.saveBookmark(bookmark);
+
+    if (result?.status === 'duplicate') {
+      await sendMessage(
+        chatId,
+        `↩️ Already saved: ${result.bookmark.title || result.bookmark.url}`,
+        env
+      );
+      return;
+    }
 
     await sendMessage(
       chatId,

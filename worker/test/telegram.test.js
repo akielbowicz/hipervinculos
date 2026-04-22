@@ -223,6 +223,37 @@ describe('handleUpdate', () => {
     expect(mockGitHubAdapter.saveBookmark).toHaveBeenCalled();
   });
 
+  it('should reply when the bookmark already exists', async () => {
+    fetchMetadata.mockResolvedValue({
+      title: 'Nucleus',
+      url: 'https://github.com/michaelwhitford/nucleus/',
+    });
+    mockGitHubAdapter.saveBookmark.mockResolvedValue({
+      status: 'duplicate',
+      bookmark: {
+        id: 'existing-id',
+        title: 'Nucleus',
+        url: 'https://github.com/michaelwhitford/nucleus',
+      },
+    });
+
+    const update = {
+      message: {
+        chat: { id: 123 },
+        text: 'https://github.com/michaelwhitford/nucleus/',
+      },
+    };
+
+    await handleUpdate(update, mockEnv);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/sendMessage'),
+      expect.objectContaining({
+        body: expect.stringContaining('Already saved'),
+      })
+    );
+  });
+
   it('should respond with help for unknown commands', async () => {
     const update = {
       message: {

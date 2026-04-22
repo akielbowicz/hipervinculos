@@ -65,6 +65,10 @@ add url title="":
 split-bookmarks *args="":
     @node scripts/split-bookmarks.js {{args}}
 
+# Deduplicate bookmarks (dry run by default; pass --apply to write)
+dedup-bookmarks *args="":
+    @node scripts/dedup-bookmarks.js {{args}}
+
 # Validate bookmark data integrity
 validate:
     @echo "🔍 Validating bookmark data..."
