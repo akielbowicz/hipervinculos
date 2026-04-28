@@ -42,11 +42,10 @@ export async function fetchMetadata(url) {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      return { url: response.url || url, partial: true };
+      return { url, partial: true };
     }
 
     const html = await response.text();
-    const finalUrl = response.url || url;
 
     const $ = cheerio.load(html);
 
@@ -72,7 +71,7 @@ export async function fetchMetadata(url) {
       title: title || undefined,
       description: description || undefined,
       image: image || undefined,
-      url: finalUrl,
+      url,
     };
   } catch (error) {
     clearTimeout(timeoutId);
