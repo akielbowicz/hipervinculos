@@ -27,7 +27,15 @@ jobs:
         run: npm ci
 
       - name: Run auto-tag
-        run: node scripts/auto-tag.js --apply
+        id: auto_tag
+        continue-on-error: true
+        run: |
+          set +e
+          node scripts/auto-tag.js --apply > auto-tag-report.txt 2>&1
+          status=$?
+          cat auto-tag-report.txt
+          echo "status=$status" >> $GITHUB_OUTPUT
+          exit $status
 
       - name: Configure Git
         run: |
@@ -35,8 +43,71 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit changes
+        id: commit_changes
+        continue-on-error: true
         run: |
+          set +e
           git add data/bookmarks.jsonl data/tags.jsonl
-          git diff --quiet && git diff --staged --quiet || \
-            git commit -m "chore(data): auto-tag bookmarks [skip ci]"
-          git push || true
+          if git diff --cached --quiet; then
+            echo "committed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> $GITHUB_OUTPUT
+            echo "No auto-tag changes to commit" > commit-report.txt
+            cat commit-report.txt
+            exit 0
+          fi
+
+          git commit -m "chore(data): auto-tag bookmarks [skip ci]" > commit-report.txt 2>&1
+          commit_status=$?
+          cat commit-report.txt
+          if [ $commit_status -ne 0 ]; then
+            echo "committed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> $GITHUB_OUTPUT
+            exit $commit_status
+          fi
+
+          echo "committed=true" >> $GITHUB_OUTPUT
+          git push > push-report.txt 2>&1
+          push_status=$?
+          cat push-report.txt
+          if [ $push_status -eq 0 ]; then
+            echo "pushed=true" >> $GITHUB_OUTPUT
+          else
+            echo "pushed=false" >> $GITHUB_OUTPUT
+          fi
+          exit 0
+
+      - name: Auto-tag summary
+        if: always()
+        run: |
+          echo "## Auto-tag Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Auto-tag status: ${{ steps.auto_tag.outputs.status || 'not-run' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Changes committed: ${{ steps.commit_changes.outputs.committed || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Changes pushed: ${{ steps.commit_changes.outputs.pushed || 'false' }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f auto-tag-report.txt ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Auto-tag Log" >> $GITHUB_STEP_SUMMARY
+            echo '\`\`\`' >> $GITHUB_STEP_SUMMARY
+            tail -20 auto-tag-report.txt >> $GITHUB_STEP_SUMMARY
+            echo '\`\`\`' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload auto-tag reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auto-tag-reports
+          path: |
+            auto-tag-report.txt
+            commit-report.txt
+            push-report.txt
+          retention-days: 30
+
+      - name: Fail workflow if auto-tag failed
+        if: always()
+        run: |
+          if [ "${{ steps.auto_tag.outputs.status || '1' }}" != "0" ]; then
+            echo "Auto-tag failed"
+            exit 1
+          fi

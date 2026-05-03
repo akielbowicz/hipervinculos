@@ -34,26 +34,43 @@ jobs:
 
       - name: Validate bookmark data
         id: validate
+        continue-on-error: true
         run: |
+          set +e
           node scripts/validate-bookmarks.js > validation-report.txt 2>&1
-          echo "status=$?" >> $GITHUB_OUTPUT
+          status=$?
+          echo "status=$status" >> $GITHUB_OUTPUT
+          exit $status
 
       - name: Check for broken links
         id: links
         continue-on-error: true
         run: |
+          set +e
           node scripts/check-links.js > link-report.txt 2>&1
-          echo "status=$?" >> $GITHUB_OUTPUT
+          status=$?
+          echo "status=$status" >> $GITHUB_OUTPUT
+          exit $status
 
       - name: Generate validation summary
+        if: always()
         run: |
+          validation_status="${{ steps.validate.outputs.status || '1' }}"
+          link_status="${{ steps.links.outputs.status || '1' }}"
+
           echo "## Validation Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ steps.validate.outputs.status }}" == "0" ]; then
+          if [ "$validation_status" = "0" ]; then
             echo "✅ **Data Validation**: PASSED" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ **Data Validation**: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$link_status" = "0" ]; then
+            echo "✅ **Link Check**: COMPLETED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Link Check**: FAILED" >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -79,6 +96,14 @@ jobs:
             validation-report.txt
             link-report.txt
           retention-days: 30
+
+      - name: Fail workflow if validation failed
+        if: always()
+        run: |
+          if [ "${{ steps.validate.outputs.status || '1' }}" != "0" ]; then
+            echo "Bookmark data validation failed"
+            exit 1
+          fi
 
       - name: Create issue on failure
         if: failure()

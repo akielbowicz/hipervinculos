@@ -23,14 +23,16 @@ jobs:
         run: echo "date=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
 
       - name: Create backup archive
+        id: create_archive
         run: |
           mkdir -p backups
           tar -czf backups/bookmarks-backup-${{ steps.timestamp.outputs.date }}.tar.gz \
             data/bookmarks.jsonl \
             data/metadata.json \
-            data/tags.jsonl
+            data/tags.jsonl > backup-archive-report.txt 2>&1
 
       - name: Generate backup manifest
+        id: manifest
         run: |
           cat > backups/manifest.json <<EOF
           {
@@ -45,6 +47,7 @@ jobs:
             ]
           }
           EOF
+          cp backups/manifest.json backup-manifest-report.json
 
       - name: Upload backup artifact
         uses: actions/upload-artifact@v4
@@ -54,6 +57,8 @@ jobs:
           retention-days: 90
 
       - name: Create release for backup
+        id: create_release
+        continue-on-error: true
         uses: softprops/action-gh-release@v1
         with:
           tag_name: backup-${{ steps.timestamp.outputs.date }}
@@ -88,6 +93,8 @@ jobs:
           prerelease: false
 
       - name: Cleanup old backups
+        id: cleanup
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -127,11 +134,37 @@ jobs:
             console.log(`Cleaned up ${toDelete.length} old backups`);
 
       - name: Backup summary
+        if: always()
         run: |
           echo "## Backup Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Timestamp**: ${{ steps.timestamp.outputs.date }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Total bookmarks**: $(jq '.total_bookmarks' data/metadata.json)" >> $GITHUB_STEP_SUMMARY
           echo "- **Archive size**: $(du -h backups/bookmarks-backup-${{ steps.timestamp.outputs.date }}.tar.gz | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release status**: ${{ steps.create_release.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Cleanup status**: ${{ steps.cleanup.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Backup available as release: \`backup-${{ steps.timestamp.outputs.date }}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload backup reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-reports-${{ steps.timestamp.outputs.date }}
+          path: |
+            backup-archive-report.txt
+            backup-manifest-report.json
+          retention-days: 30
+
+      - name: Fail workflow if release or cleanup failed
+        if: always()
+        run: |
+          if [ "${{ steps.create_release.outcome || 'failure' }}" = "failure" ]; then
+            echo "Backup release creation failed"
+            exit 1
+          fi
+
+          if [ "${{ steps.cleanup.outcome || 'failure' }}" = "failure" ]; then
+            echo "Backup cleanup failed"
+            exit 1
+          fi

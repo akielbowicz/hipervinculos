@@ -42,16 +42,32 @@ jobs:
         run: npm install -g pagefind
 
       - name: Backfill missing metadata
-        run: node scripts/backfill-metadata.js --limit 10 --delay 500
+        id: backfill
+        continue-on-error: true
+        run: |
+          set +e
+          node scripts/backfill-metadata.js --limit 10 --delay 500 > backfill-report.txt 2>&1
+          status=$?
+          echo "status=$status" >> $GITHUB_OUTPUT
+          exit $status
 
       - name: Generate HTML pages from bookmarks
-        run: node scripts/generate-pages.js
+        id: generate_pages
+        run: |
+          node scripts/generate-pages.js > generate-pages-report.txt 2>&1
+          cat generate-pages-report.txt
 
       - name: Build Pagefind search index
-        run: npx pagefind --site .
+        id: pagefind
+        run: |
+          npx pagefind --site . > pagefind-report.txt 2>&1
+          cat pagefind-report.txt
 
       - name: Update metadata statistics
-        run: node scripts/update-metadata.js
+        id: update_metadata
+        run: |
+          node scripts/update-metadata.js > metadata-report.txt 2>&1
+          cat metadata-report.txt
 
       - name: Configure Git
         run: |
@@ -59,11 +75,38 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit generated files
+        id: commit_generated
+        continue-on-error: true
         run: |
+          set +e
           git add data/metadata.json data/bookmarks.jsonl
-          git diff --quiet && git diff --staged --quiet || \
-            git commit -m "build: update metadata [skip ci]"
-          git push || true
+          if git diff --cached --quiet; then
+            echo "committed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> $GITHUB_OUTPUT
+            echo "No generated changes to commit" > commit-report.txt
+            cat commit-report.txt
+            exit 0
+          fi
+
+          git commit -m "build: update metadata [skip ci]" > commit-report.txt 2>&1
+          commit_status=$?
+          cat commit-report.txt
+          if [ $commit_status -ne 0 ]; then
+            echo "committed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> $GITHUB_OUTPUT
+            exit $commit_status
+          fi
+
+          echo "committed=true" >> $GITHUB_OUTPUT
+          git push > push-report.txt 2>&1
+          push_status=$?
+          cat push-report.txt
+          if [ $push_status -eq 0 ]; then
+            echo "pushed=true" >> $GITHUB_OUTPUT
+          else
+            echo "pushed=false" >> $GITHUB_OUTPUT
+          fi
+          exit 0
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -88,9 +131,35 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Build summary
+        if: always()
         run: |
           echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Total bookmarks: $(node -e "console.log(require('./data/metadata.json').total_bookmarks)")" >> $GITHUB_STEP_SUMMARY
-          echo "- Pages generated: $(ls pages/*.html 2>/dev/null | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- Deployment URL: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Pages generated: $(find pages -maxdepth 1 -name '*.html' | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Backfill status: ${{ steps.backfill.outputs.status || 'not-run' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Generated changes committed: ${{ steps.commit_generated.outputs.committed || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Generated changes pushed: ${{ steps.commit_generated.outputs.pushed || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployment URL: ${{ steps.deployment.outputs.page_url || 'unavailable' }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f backfill-report.txt ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Backfill Log" >> $GITHUB_STEP_SUMMARY
+            echo '\`\`\`' >> $GITHUB_STEP_SUMMARY
+            tail -20 backfill-report.txt >> $GITHUB_STEP_SUMMARY
+            echo '\`\`\`' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload build reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-reports
+          path: |
+            backfill-report.txt
+            generate-pages-report.txt
+            pagefind-report.txt
+            metadata-report.txt
+            commit-report.txt
+            push-report.txt
+          retention-days: 30
