@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1375,
-  "last_updated": "2026-05-27T20:30:22.009Z",
-  "last_bookmark_id": "46ee48c1-ba2a-4455-ae9e-2a5363426914",
+  "total_bookmarks": 1376,
+  "last_updated": "2026-06-01T11:44:44.416Z",
+  "last_bookmark_id": "01482524-c075-4dce-bfb6-e17a9d45e58f",
   "statistics": {
     "by_type": {
       "article": 1036,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 66
+      "other": 67
     },
     "by_read_status": {
-      "unread": 1375,
+      "unread": 1376,
       "reading": 0,
       "read": 0
     },
@@ -25,7 +25,7 @@
   "tags_usage": {
     "cli": 1,
     "devtools": 107,
-    "github": 267,
+    "github": 268,
     "llm": 1,
     "prompting": 1,
     "reference": 1,
@@ -37,7 +37,7 @@
     "tutorial": 368,
     "haskell": 42,
     "video": 70,
-    "architecture": 18,
+    "architecture": 19,
     "javascript": 38,
     "machine-learning": 64,
     "clojure": 42,
