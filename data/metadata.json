@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1383,
-  "last_updated": "2026-06-26T23:05:58.734Z",
-  "last_bookmark_id": "916f4813-53e5-41ef-aad0-a927e34b70ff",
+  "total_bookmarks": 1384,
+  "last_updated": "2026-07-06T11:36:49.544Z",
+  "last_bookmark_id": "87c7ca3e-0274-4828-8b55-dbad768772bf",
   "statistics": {
     "by_type": {
       "article": 1036,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 74
+      "other": 75
     },
     "by_read_status": {
-      "unread": 1383,
+      "unread": 1384,
       "reading": 0,
       "read": 0
     },
@@ -40,7 +40,7 @@
     "architecture": 19,
     "javascript": 39,
     "machine-learning": 65,
-    "clojure": 42,
+    "clojure": 43,
     "julia": 45,
     "rust": 16,
     "go": 1
