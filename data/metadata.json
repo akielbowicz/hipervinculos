@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1388,
-  "last_updated": "2026-08-07T00:05:26.760Z",
-  "last_bookmark_id": "29829e52-f43e-4789-b1a5-52ad59cfd15e",
+  "total_bookmarks": 1389,
+  "last_updated": "2026-08-14T11:40:09.330Z",
+  "last_bookmark_id": "7bd8c236-3c6e-43fb-bfac-ec447a197d42",
   "statistics": {
     "by_type": {
       "article": 1036,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 79
+      "other": 80
     },
     "by_read_status": {
-      "unread": 1388,
+      "unread": 1389,
       "reading": 0,
       "read": 0
     },
@@ -24,25 +24,25 @@
   },
   "tags_usage": {
     "cli": 1,
-    "devtools": 108,
+    "devtools": 109,
     "github": 268,
     "llm": 1,
     "prompting": 1,
     "reference": 1,
     "tools": 1,
-    "python": 148,
-    "visualization": 85,
-    "design": 310,
-    "data": 48,
+    "python": 149,
+    "visualization": 86,
+    "design": 312,
+    "data": 49,
     "tutorial": 368,
     "haskell": 42,
     "video": 70,
     "architecture": 19,
     "javascript": 39,
-    "machine-learning": 65,
+    "machine-learning": 67,
     "clojure": 43,
     "julia": 45,
-    "rust": 16,
+    "rust": 17,
     "go": 1
   }
 }
