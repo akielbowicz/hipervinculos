@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1405,
-  "last_updated": "2026-09-15T12:53:56.731Z",
-  "last_bookmark_id": "7ff518d4-4f10-41c7-b1b6-163a103dbc18",
+  "total_bookmarks": 1406,
+  "last_updated": "2026-09-20T13:36:20.753Z",
+  "last_bookmark_id": "6d81946d-7fe6-414f-bd92-c18152d27ba6",
   "statistics": {
     "by_type": {
       "article": 1036,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 96
+      "other": 97
     },
     "by_read_status": {
-      "unread": 1405,
+      "unread": 1406,
       "reading": 0,
       "read": 0
     },
@@ -24,15 +24,15 @@
   },
   "tags_usage": {
     "cli": 1,
-    "devtools": 109,
+    "devtools": 110,
     "github": 269,
     "llm": 1,
     "prompting": 1,
     "reference": 1,
     "tools": 1,
-    "python": 149,
+    "python": 150,
     "visualization": 87,
-    "design": 317,
+    "design": 318,
     "data": 49,
     "tutorial": 371,
     "haskell": 42,
