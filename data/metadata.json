@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "total_bookmarks": 1413,
-  "last_updated": "2026-10-26T17:01:37.014Z",
-  "last_bookmark_id": "12570a54-266c-4927-b701-b2062d046086",
+  "total_bookmarks": 1414,
+  "last_updated": "2026-11-11T02:26:58.037Z",
+  "last_bookmark_id": "036970b3-eb45-4318-84e1-038831428ab3",
   "statistics": {
     "by_type": {
       "article": 1036,
@@ -11,10 +11,10 @@
       "pdf": 13,
       "code": 205,
       "tweet": 10,
-      "other": 104
+      "other": 105
     },
     "by_read_status": {
-      "unread": 1413,
+      "unread": 1414,
       "reading": 0,
       "read": 0
     },
@@ -32,9 +32,9 @@
     "tools": 1,
     "python": 150,
     "visualization": 87,
-    "design": 319,
+    "design": 320,
     "data": 49,
-    "tutorial": 371,
+    "tutorial": 372,
     "haskell": 42,
     "video": 70,
     "architecture": 19,
